@@ -25,7 +25,11 @@
           type="email"
           required
           class="w-full color-black "
+          @blur="switchBanner"
         ></q-input>
+        <q-banner v-if="showEmailError" class="q-mt-md color-red" dense>
+          <span> Este email ya esta en uso</span>
+        </q-banner>
         <q-input
           filled
           v-model="password"
@@ -53,6 +57,21 @@
           <span>{{ confirmationErrorMessage }}</span>
         </q-banner>
         <q-btn type="submit" label="Register" color="primary" class="w-full" @click="register" :disable="!formValid" />
+
+        <q-dialog v-model="showPopup" transition-show="scale" transition-hide="scale">
+      <q-card class="q-pa-md" style="width: 350px; max-width: 80vw;">
+        <q-card-section class="text-center">
+          <img src="/confirm-icon.png" alt="confirmacion">
+          <div class="text-h5 q-mt-md">Cuenta creada</div>
+          <div class="q-mt-sm">Se envio un correo de confirmacion a tu email</div>
+        </q-card-section>
+        
+        <q-card-actions align="center">
+          <q-btn flat label="OK" color="primary" @click="showPopup = false" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
       </q-form>
     </q-card>
   </q-page>
@@ -64,6 +83,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useUserStore } from '~/stores/user';
+import axios from 'axios';
 
 const name = ref('');
 const email = ref('');
@@ -77,6 +97,12 @@ const userStore = useUserStore();
 const showPasswordError = ref(false)
 const showConfirmationError = ref(false)
 const confirmationErrorMessage = ref('');
+const showEmailError=ref(false);
+const showPopup=ref(false)
+
+
+console.log("show:: ", showPopup.value)
+const switchBanner=()=>{if(showEmailError.value)showEmailError.value=false;}
 const validatePassword = () => {
   if (password.value.length < 10 || password.value.length > 15) {
     errorMessage.value = 'La contraseña debe tener entre 10 y 15 caracteres.';
@@ -132,11 +158,35 @@ const validateConfirmPassword = () => {
   }
 };
 
-const register = () => {
+const register = async () => {
+  
   validatePassword();
   if (formValid.value) {
-    userStore.addUser({ name: name.value, email: email.value, password: password.value });
+    try {
+      await axios.post('http://localhost:3005/auth/register', {
+        email: email.value,
+        password: password.value,
+        userName: name.value,
+      });
+      userStore.addUser({ name: name.value, email: email.value, password: password.value });
+      showPopup.value=true;
+      resetForm();
+      
+    } catch (error) {
+      showEmailError.value=true
+    }
   }
+};
+
+const resetForm = () => {
+  name.value = '';
+  email.value = '';
+  password.value = '';
+  confirmPassword.value = '';
+  errorMessage.value = '';
+  confirmationErrorMessage.value = '';
+  formValid.value = false;
+  showEmailError.value=false;
 };
 
 </script>

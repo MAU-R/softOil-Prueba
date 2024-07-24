@@ -3,8 +3,9 @@
  <QLayout>
   <QPageContainer>
     <q-page class="flex items-center justify-center min-h-screen">
-    <q-card class="p-8 space-y-6  rounded shadow-md max-w-md w-full">
-      <q-card-section>
+      <div class="flex flex-nowrap">
+      <q-card class="p-8 space-y-6  rounded shadow-md max-w-md w-full min-w-96">
+      <q-card-section class="bc-gray">
         <h2 class="text-2xl font-bold text-center">Registrarse</h2>
       </q-card-section>
       <q-form @submit="register" @reset="resetForm" class="space-y-4">
@@ -74,6 +75,11 @@
 
       </q-form>
     </q-card>
+      <q-card class=" sm:hidden flex flex-row  bg-contain bg-center bc-img space-y-6  rounded shadow-md max-w-md w-full min-w-96">
+        <img class=" w-1/2 bg-contain bg-center" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F005%2F879%2F539%2Foriginal%2Fcloud-computing-modern-flat-concept-for-web-banner-design-man-enters-password-and-login-to-access-cloud-storage-for-uploading-and-processing-files-illustration-with-isolated-people-scene-free-vector.jpg&f=1&nofb=1&ipt=77263d7613c73000f4983e212f701eb4e960f4c14556250c9d3630337f3cd02d&ipo=images" alt="Registrarte">
+      </q-card>
+      </div>
+    
   </q-page>
   </QPageContainer>
  </QLayout>
@@ -126,7 +132,7 @@ const validatePassword = () => {
     return;
   }
   if (!/[@$!%*?&]/.test(password.value)) {
-    errorMessage.value = 'La contraseña debe contener al menos un carácter especial.';
+    errorMessage.value = 'La contraseña debe contener uno de estos simbolos @$!%*?&';
     validPass.value = false;
     formValid.value=false;
     showPasswordError.value=true;
@@ -192,6 +198,9 @@ const resetForm = () => {
 </script>
 
 <style scoped>
+.bc-img{
+  background-image: url("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F005%2F879%2F539%2Foriginal%2Fcloud-computing-modern-flat-concept-for-web-banner-design-man-enters-password-and-login-to-access-cloud-storage-for-uploading-and-processing-files-illustration-with-isolated-people-scene-free-vector.jpg&f=1&nofb=1&ipt=77263d7613c73000f4983e212f701eb4e960f4c14556250c9d3630337f3cd02d&ipo=images");
+}
 .color-red{
   color: red;
 }

@@ -1,4 +1,4 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
@@ -41,8 +41,36 @@ export class AuthService {
       }
       throw error;
     }
-    
-
 
   }
+
+  async updateUser(id: number, dto: RegisterDto) {
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
+    try {
+      const user = await this.prisma.users.update({
+        where: { id },
+        data: {
+          email: dto.email,
+          password: hashedPassword,
+          userName: dto.userName,
+        },
+      });
+      return user;
+    } catch (error) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+  }
+
+  async deleteUser(id: number) {
+    try {
+      await this.prisma.users.delete({ where: { id } });
+    } catch (error) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+  }
+
+  async getUsers() {
+    return this.prisma.users.findMany();
+  }
 }
+

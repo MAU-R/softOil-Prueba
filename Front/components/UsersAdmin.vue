@@ -58,7 +58,6 @@
   //Usamos hoks de composition para cargar componentes y ref para usar valores en vue 
   import { ref, onMounted } from 'vue';
   import { useUserStore } from '~/stores/user';
-  import { QDialog, QCard, QCardSection, QCardActions, QBtn, QInput, QForm } from 'quasar';
   //Usamos el store de usuarios
   const store = useUserStore();
   const showEmailError=ref(false)

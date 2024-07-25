@@ -43,13 +43,6 @@
               <q-banner v-if="showEmailError" class="q-mt-md color-red" dense>
                     <span> Este email ya esta en uso</span>
             </q-banner>
-              <q-input
-                v-model="editUserForm.password"
-                label="Contraseña"
-                type="password"
-                required
-                class="q-mb-md"
-              />
               <q-card-actions align="center">
                 <q-btn type="submit" label="Actualizar" color="primary" class="q-mr-sm" />
                 <q-btn flat label="Cancelar" color="primary" @click="showEditPopup = false" />
@@ -62,30 +55,31 @@
   </template>
   
   <script setup lang="ts">
+  //Usamos hoks de composition para cargar componentes y ref para usar valores en vue 
   import { ref, onMounted } from 'vue';
   import { useUserStore } from '~/stores/user';
   import { QDialog, QCard, QCardSection, QCardActions, QBtn, QInput, QForm } from 'quasar';
-  
+  //Usamos el store de usuarios
   const store = useUserStore();
   const showEmailError=ref(false)
   const showEditPopup = ref(false);
   const editUserForm = ref({ id: 0, userName: '', email: '', password: '' });
-  
+  onMounted(async () => {
+  await store.fetchUsers();
+});
   // Obtenemos la lista de usuarios del store de manera reactiva
 const users = computed(() => store.users);
 
 // Usamos el hook onMounted para cargar los usuarios cuando el componente se monta
-onMounted(async () => {
-  await store.fetchUsers();
-});
 
+  //funcion para el handle de edit donde obtenemos los valores del usuario 
   const editUser = (user: { id: number, userName: string, email: string, password: string }) => {
     editUserForm.value = { ...user };
     showEditPopup.value = true;
   };
-  
+  //funcion para handle de confirmar edit
   const updateUser = async () => {
-    console.log("empezamos a editar")
+    //Hazemos un try para mandar llamar a la funcion updateuser del store de pinia 
     try{
         await store.updateUser(editUserForm.value.id, {
       userName: editUserForm.value.userName,
@@ -94,12 +88,11 @@ onMounted(async () => {
     });
     showEditPopup.value = false;
     }catch(err){
-        console.log("El errorsaso:   ", err)
         showEmailError.value=true
     }
 
   };
-  
+  //Funcion para eliminar usuario donde llamamos deleteUser() y mandamos el id 
   const deleteUser = async (id: number) => {
     await store.deleteUser(id);
   };

@@ -7,7 +7,7 @@ import {
   import { Observable } from 'rxjs';
   import { tap } from 'rxjs/operators';
   import { LogService } from './log.service';
-  
+  //Usaremos un middelware para que cuando haya una transaccion guardarlo en un log en postgree
   @Injectable()
   export class LogInterceptor implements NestInterceptor {
     constructor(private logService: LogService) {}

@@ -3,6 +3,7 @@
 
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+//definimos los clientes y el source del database para usar postgre con el url definido en .env
 
 generator client {
   provider = "prisma-client-js"
@@ -12,7 +13,7 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
+//Definimos el modelo del usuario 
 model users {
   id       Int     @id @default(autoincrement())
   email    String  @unique
@@ -20,7 +21,7 @@ model users {
   userName     String
   createdAt DateTime @default(now())
 }
-
+//Definimos el modelo de la tabla de logs
 model activity_log {
   id        Int      @id @default(autoincrement())
   activity  String

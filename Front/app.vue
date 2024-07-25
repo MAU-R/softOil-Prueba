@@ -2,9 +2,9 @@
   <div class="container mx-auto p-4">
     <div class="flex items-start justify-between max-w-screen pad-sm bc-grey">
       <h1 class="text-2xl font-bold mb-4">Gestión de Usuarios</h1>
-      <div>
-        <button @click="currentPage = 'register'" class="mr-4">Registrar Usuario</button>
-        <button @click="currentPage = 'admin'">Administrar Usuarios</button>
+      <div class="flex items-start justify-between">
+        <button @click="currentPage = 'register'" class="btn btn-gray m-1">Registrar Usuario</button>
+        <button @click="currentPage = 'admin'" class="m-1">Administrar Usuarios</button>
       </div>
     </div>
 

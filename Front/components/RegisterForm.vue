@@ -90,7 +90,7 @@
  import { ref } from 'vue';
  import { useUserStore } from '~/stores/user';
  import axios from 'axios';
- 
+ /*Variables para mostrar banners, referencias para valores de los input*/ 
  const name = ref('');
  const email = ref('');
  const password = ref('');
@@ -107,10 +107,14 @@
  const showPopup=ref(false)
  
  
- console.log("show:: ", showPopup.value)
+//Funcion para cambiar el valor de show banner
  const switchBanner=()=>{if(showEmailError.value)showEmailError.value=false;}
+ //Funcion para validar contraseña
  const validatePassword = () => {
+  //Los if sirven para revisar si alguna de las condiciones falla
+  //checando que tenga ciertos caracteres o longitud correcta
    if (password.value.length < 10 || password.value.length > 15) {
+    //El error message se muestra bajo el input para indicar al usuario que falta algo 
      errorMessage.value = 'La contraseña debe tener entre 10 y 15 caracteres.';
      validPass.value = false;
      formValid.value=false;
@@ -138,22 +142,23 @@
      showPasswordError.value=true;
      return;
    }
+   //Cuando la contraseña cumple con todos las validaciones se quita el mensaje de error
    showPasswordError.value=false;
    validPass.value=true
    errorMessage.value = '';
    validateConfirmPassword();
  };
- 
+ //validacion que las dos contraseñas sean iguales 
  const validateConfirmPassword = () => {
    
-   console.log("show:: ", showPasswordError.value)
-   console.log("si diiii" + formValid.value)
+
    if (password.value !== confirmPassword.value) {
      confirmationErrorMessage.value= 'Las contraseñas no coinciden.';
      validPassConfirm.value = false;
      formValid.value=false
      showConfirmationError.value=true
    } else {
+    //Cuando se cumple la condicion donde la contraseña es valida y la confirmacion es igual se habilida el boton para registrartse
      showConfirmationError.value=false
      validPassConfirm.value=true;
      errorMessage.value = '';
@@ -164,21 +169,26 @@
    }
  };
  
+
+//funcion para registrar el usuario 
  const register = async () => {
-   
    validatePassword();
    if (formValid.value) {
+    //usamos axios para registrar el usuario en el backend
      try {
       const usuario =  await axios.post('http://localhost:3005/auth/register', {
          email: email.value,
          password: password.value,
          userName: name.value,
        });
+       //Acutalizamos el usuario en el store de pinia 
        userStore.addUser({...usuario});
+       //Mostramos un popup para decirle al usuario que todo salio bien 
        showPopup.value=true;
        resetForm();
        
      } catch (error) {
+      //En caso de obtener el error de que el email esta en uso mostramos el error de email 
        showEmailError.value=true
      }
    }
